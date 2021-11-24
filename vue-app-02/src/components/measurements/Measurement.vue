@@ -3,8 +3,8 @@
     <v-card-text>
       <v-sheet color="teal lighten-3">
         <v-sparkline
-          :labels=measurements
-          :value=measurements
+          :labels=processedData
+          :value=processedData
           :gradient="gradient"
           :smooth="radius || false"
           :padding="padding"
@@ -48,6 +48,8 @@ export default {
       endDate: this.pickerDates[1],
       measurements: [],
       measurementsLength: '',
+      processedData: [],
+      maxValues: 16,
       width: 2,
       radius: 10,
       padding: 8,
@@ -64,6 +66,7 @@ export default {
   //the calculation for the reduced dataset isn't working reliable. I'm not sure if
   //the first and the last values are correct
   //With datasets below the max(32) things can go wrong
+  //Moisture is always 0, becasue if you get an average of 0 and 1 and floor it, it is 0
   created() {
     axios.get('http://localhost:8080/api/measurements'
           + '/' + this.measurementType
@@ -76,23 +79,22 @@ export default {
           this.measurementsLength = this.measurements.length
           // console.log(this.startDate)
           // console.log(this.endDate)
-          // console.log(this.measurements)
-          var factor = Math.floor(this.measurementsLength/32)
+          console.log(this.measurements)
+          var factor = Math.floor(this.measurementsLength/this.maxValues)
           console.log(this.measurementsLength)
           console.log(factor)
-          var processedData = [];
           var tempValue = 0;
           for (let key in this.measurements) {
             var measurement = this.measurements[key];
               tempValue+=measurement;
             if(key%factor == 0) {
               tempValue=Math.floor(tempValue/factor)
-              processedData.push(tempValue);
+              this.processedData.push(tempValue);
               tempValue = 0;
             }
             console.log(key);
           }
-          console.log(processedData);
+          console.log(this.processedData);
       });
     // PlantService.getTempMeasurements().then((response) => {
     //   this.measurements = response.data;
