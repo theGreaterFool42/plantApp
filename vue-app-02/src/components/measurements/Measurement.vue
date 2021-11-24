@@ -40,10 +40,13 @@ const gradients = [
 
 export default {
   name: "TempMeasurement",
-  props: ['slyder',
+  props: ['slyderBegin',
+          'slyderEnd',
           'measurementType'],
   data() {
     return {
+      offset: this.slyderEnd,
+      pageSize: this.slyderBegin,
       measurements: [],
       measurementsLength: '',
       width: 2,
@@ -60,12 +63,22 @@ export default {
   },
   methods: {},
   created() {
-      axios.get('http://localhost:8080/api/measurements/' + this.measurementType  + '/' + this.$route.params.plantId)
+      axios.get('http://localhost:8080/api/measurements'
+          + '/' + this.measurementType
+          + '/' + this.$route.params.plantId
+          + '/' + 'pagination/timeStamp'
+          + '/' + this.offset
+          + '/' + this.pageSize )
       .then(response => {
-          var slicedData = response.data.slice(response.data.length - this.slyder, response.data.length);
-          this.measurements = slicedData;
-          this.measurementsLength = slicedData.length;
+          //var slicedData = response.data.slice(response.data.length - this.slyder, response.data.length);
+          //this.measurements = slicedData;
+          //this.measurementsLength = slicedData.length;
           //console.log(slicedData);
+          this.measurements = response.data.content
+          this.measurementsLength = this.measurements.length
+          console.log(this.offset)
+          console.log(this.pageSize)
+          console.log(this.measurements)
       });
     // PlantService.getTempMeasurements().then((response) => {
     //   this.measurements = response.data;

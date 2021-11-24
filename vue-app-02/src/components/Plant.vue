@@ -54,9 +54,16 @@
 
     <v-card-title>Look! Graphs!</v-card-title>
     <v-slider
-        v-model="sliderValue"
+        v-model="sliderValueBegin"
         color="deep-purple lighten-1"
-        thumb-label="always">
+        thumb-label="always"
+        max="32">
+      </v-slider>
+    <v-slider
+        v-model="sliderValueEnd"
+        color="amber lighten-1"
+        thumb-label="always"
+        max="4">
       </v-slider>
     <v-card-text>
       <v-chip-group
@@ -98,10 +105,10 @@
         <!-- <hum-measurements-component v-if="chipHum" :slyder="sliderValue"></hum-measurements-component> -->
         <!-- <mois-measurements-component v-if="chipMois"></mois-measurements-component> -->
         <!-- <light-measurements-component v-if="chipLight"></light-measurements-component> -->
-        <measurements-component v-if="chipTemp" :slyder="sliderValue" measurementType="temp"></measurements-component>
-        <measurements-component v-if="chipHum" :slyder="sliderValue" measurementType="humidity"></measurements-component>
-        <measurements-component v-if="chipMois" :slyder="sliderValue" measurementType="moisture"></measurements-component>
-        <measurements-component v-if="chipLight" :slyder="sliderValue" measurementType="light"></measurements-component>
+        <measurements-component v-if="chipTemp" :slyderBegin="sliderValueBegin" :slyderEnd="sliderValueEnd" measurementType="temp"></measurements-component>
+        <measurements-component v-if="chipHum" :slyderBegin="sliderValueBegin" :slyderEnd="sliderValueEnd" measurementType="humidity"></measurements-component>
+        <measurements-component v-if="chipMois" :slyderBegin="sliderValueBegin" :slyderEnd="sliderValueEnd" measurementType="moisture"></measurements-component>
+        <measurements-component v-if="chipLight" :slyderBegin="sliderValueBegin" :slyderEnd="sliderValueEnd" measurementType="light"></measurements-component>
       </v-chip-group>
     </v-card-text>
 
@@ -122,12 +129,18 @@
 
 
 <script>
+
+//get the length of the measurement
+//create a date picker
+//get index of measurement/temp where time_stamp == date picker => set to slider min
+//get index of measurement/temp where time_stamp == date picker => set to slider max
 import PlantService from "../services/PlantService";
 export default {
     name: "Plant",
   data() {
       return {
-          sliderValue: '42',
+          sliderValueBegin: '19',
+          sliderValueEnd: '42',
           loading: false,
           selection: [],
           plantId: '1',
