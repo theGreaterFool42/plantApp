@@ -50,54 +50,31 @@
     <v-divider class="mx-4"></v-divider>
 
     <v-card-title>Look! Graphs!</v-card-title>
-    <v-chip @click="chipDatePicker = !chipDatePicker">DatePicker</v-chip>
-<v-col
-      cols="12"
-      sm="6"
-      v-if="chipDatePicker"
-    >
-      <v-date-picker
-        v-model="dates"
-        range
-      ></v-date-picker>
-    </v-col>
-    <v-col
-      cols="12"
-      sm="6"
-      v-if="chipDatePicker"
-    >
-      <v-text-field
-        v-model="dateRangeText"
-        label="Date range"
-        prepend-icon="mdi-calendar"
-        readonly
-      ></v-text-field>
-    </v-col>
-    <!-- <date-picker-component v-if="chipDatePicker"></date-picker-component> -->
-    <!-- <v-slider
-        v-model="sliderValueStart"
-        color="deep-purple lighten-1"
-        thumb-label="always"
-        max="32">
-      </v-slider>
-    <v-slider
-        v-model="sliderValueEnd"
-        color="amber lighten-1"
-        thumb-label="always"
-        max="4">
-      </v-slider> -->
     <v-card-text>
       <v-chip-group
         multiple
         v-model="selection"
         active-class="deep-purple lighten-1 white--text"
-        color="deep-purple lighten-1"
         column
       >
+        <v-chip @click="chipDatePicker = !chipDatePicker">DatePicker</v-chip>
         <v-chip @click="chipTemp = !chipTemp">Temperatures</v-chip>
         <v-chip @click="chipHum = !chipHum">Humidity</v-chip>
         <v-chip @click="chipMois = !chipMois">Moisture</v-chip>
         <v-chip @click="chipLight = !chipLight">Light</v-chip>
+
+        <v-card-text v-if="chipDatePicker">
+          <v-date-picker v-model="dates"
+          range
+          color="deep-purple lighten-2"
+          ></v-date-picker>
+          <v-text-field
+            v-model="dateRangeText"
+            label="Date range"
+            prepend-icon="mdi-calendar"
+            readonly
+          ></v-text-field>
+        </v-card-text>
 
         <measurements-component
           v-if="chipTemp"
@@ -129,7 +106,7 @@
         color="deep-purple lighten-1"
         text
         :to="'/plantsOverview'"
-        @click="reserve"
+        @click="getToOverview"
       >
         Back to the Overview
       </v-btn>
@@ -139,10 +116,6 @@
 
 
 <script>
-//get the length of the measurement
-//create a date picker
-//get index of measurement/temp where time_stamp == date picker => set to slider min
-//get index of measurement/temp where time_stamp == date picker => set to slider max
 import PlantService from "../services/PlantService";
 export default {
   name: "Plant",
@@ -163,7 +136,7 @@ export default {
     };
   },
   methods: {
-    reserve() {
+    getToOverview() {
       this.loading = true;
 
       setTimeout(() => (this.loading = false), 2000);

@@ -24,7 +24,6 @@ this is the arduino c++ code, that generates the data for the app
 
 ### Todo
 
-- DatePicker uses the wrong colors
 - DatePicker should be a pop up (I guess)
 - there should be a limit to the displayed data points.
     - I currently ask for all the measurements of a type in a given time period with no regards how many data points there are

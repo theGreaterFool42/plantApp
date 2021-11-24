@@ -18,11 +18,11 @@
         ></v-sparkline>
       </v-sheet>
     </v-card-text>
-    <v-card-text>
+    <!-- <v-card-text>
       <div class="text-subtitle-1 font-weight-normal">
         {{measurementType}} in the last {{measurementsLength}} minutes
       </div>
-    </v-card-text>
+    </v-card-text> -->
   </v-container>
 </template>
 
@@ -61,6 +61,9 @@ export default {
     };
   },
   methods: {},
+  //the calculation for the reduced dataset isn't working reliable. I'm not sure if
+  //the first and the last values are correct
+  //With datasets below the max(32) things can go wrong
   created() {
     axios.get('http://localhost:8080/api/measurements'
           + '/' + this.measurementType
@@ -68,16 +71,28 @@ export default {
           + '/' + 'between/',
           { params: {begin: this.startDate, end: this.endDate}})
       .then(response => {
-        //var slicedData = response.data.slice(response.data.length - this.slyder, response.data.length);
-          //this.measurements = slicedData;
-          //this.measurementsLength = slicedData.length;
-          //console.log(slicedData);
-          console.log(response.data)
+          //console.log(response.data)
           this.measurements = response.data
-          // this.measurementsLength = this.measurements.length
-          console.log(this.startDate)
-          console.log(this.endDate)
-          console.log(this.measurements)
+          this.measurementsLength = this.measurements.length
+          // console.log(this.startDate)
+          // console.log(this.endDate)
+          // console.log(this.measurements)
+          var factor = Math.floor(this.measurementsLength/32)
+          console.log(this.measurementsLength)
+          console.log(factor)
+          var processedData = [];
+          var tempValue = 0;
+          for (let key in this.measurements) {
+            var measurement = this.measurements[key];
+              tempValue+=measurement;
+            if(key%factor == 0) {
+              tempValue=Math.floor(tempValue/factor)
+              processedData.push(tempValue);
+              tempValue = 0;
+            }
+            console.log(key);
+          }
+          console.log(processedData);
       });
     // PlantService.getTempMeasurements().then((response) => {
     //   this.measurements = response.data;
