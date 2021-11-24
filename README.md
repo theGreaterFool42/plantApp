@@ -29,6 +29,7 @@ this is the arduino c++ code, that generates the data for the app
     - I currently ask for all the measurements of a type in a given time period with no regards how many data points there are
     - So I have to calculate averages of points to match the limit
     - either directly in the api, or in vue
+    - ## I have started a calculation for it, but it is still a bit buggy
 - Stock photo should be a photo from the database
     - so photos must be stored in the database
         -  in the far future there should be a camera, that shoots photos, to make timelapses
