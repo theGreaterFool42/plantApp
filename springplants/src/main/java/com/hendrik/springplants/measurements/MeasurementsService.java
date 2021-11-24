@@ -1,5 +1,7 @@
 package com.hendrik.springplants.measurements;
 
+//import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,10 @@ public class MeasurementsService {
     }
     public List<Measurements> getMeasurements() {
         return measurementsRepository.findAll();
+    }
+
+    public List<Integer> getTempByTimePeriod(Long id, Date begin, Date end) {
+        return measurementsRepository.findTempByPlantIdBetween(id, begin, end);
     }
 
     public Page<Integer> getTempWithPaginationAndSorting(int offset, int pageSize, String field, Long id) {

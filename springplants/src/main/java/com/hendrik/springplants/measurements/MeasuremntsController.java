@@ -1,5 +1,6 @@
 package com.hendrik.springplants.measurements;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class MeasuremntsController {
     @GetMapping
     public List<Measurements> getMeasurements() {
         return measurementsService.getMeasurements();
+    }
+
+    @GetMapping(value = "temp/{plantId}/{begin}/{end}")
+    public List<Integer> getTempByPlantIdAndTimePeriod(@PathVariable("plantId") Long id, @PathVariable("begin") Date begin, @PathVariable("end") Date end) {
+        return measurementsService.getTempByTimePeriod(id, begin, end);
     }
 
     @GetMapping(value = "temp/{plantId}/pagination/{field}/{offset}/{pageSize}")
