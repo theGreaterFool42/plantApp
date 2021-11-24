@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 // import HumMeasurement from './components/measurements/HumMeasurement'
 // import MoisMeasurement from './components/measurements/MoisMeasurement'
 // import LightMeasurement from './components/measurements/LightMeasurement'
+import DatePicker from './components/DatePicker'
 import Measurement from './components/measurements/Measurement'
 import Plant from './components/Plant'
 
@@ -13,6 +14,7 @@ import Plant from './components/Plant'
 // Vue.component('hum-measurements-component', HumMeasurement)
 // Vue.component('mois-measurements-component', MoisMeasurement)
 // Vue.component('light-measurements-component', LightMeasurement)
+Vue.component('date-picker-component', DatePicker)
 Vue.component('measurements-component', Measurement)
 Vue.component('plant-card-component', Plant)
 Vue.config.productionTip = false

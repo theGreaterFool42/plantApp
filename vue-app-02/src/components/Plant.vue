@@ -24,13 +24,10 @@
       src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
     ></v-img>
 
-    <v-card-title>{{plantName}}</v-card-title>
+    <v-card-title>{{ plantName }}</v-card-title>
 
     <v-card-text>
-      <v-row
-        align="center"
-        class="mx-0"
-      >
+      <v-row align="center" class="mx-0">
         <v-rating
           :value="4.5"
           color="amber"
@@ -42,19 +39,43 @@
       </v-row>
 
       <div class="my-4 text-subtitle-1">
-        <p>{{plantType}}</p>
+        <p>{{ plantType }}</p>
       </div>
 
       <div>
-        <p>alive since {{plantDop}}</p>
+        <p>alive since {{ plantDop }}</p>
       </div>
     </v-card-text>
 
     <v-divider class="mx-4"></v-divider>
 
     <v-card-title>Look! Graphs!</v-card-title>
-    <v-slider
-        v-model="sliderValueBegin"
+    <v-chip @click="chipDatePicker = !chipDatePicker">DatePicker</v-chip>
+<v-col
+      cols="12"
+      sm="6"
+      v-if="chipDatePicker"
+    >
+      <v-date-picker
+        v-model="dates"
+        range
+      ></v-date-picker>
+    </v-col>
+    <v-col
+      cols="12"
+      sm="6"
+      v-if="chipDatePicker"
+    >
+      <v-text-field
+        v-model="dateRangeText"
+        label="Date range"
+        prepend-icon="mdi-calendar"
+        readonly
+      ></v-text-field>
+    </v-col>
+    <!-- <date-picker-component v-if="chipDatePicker"></date-picker-component> -->
+    <!-- <v-slider
+        v-model="sliderValueStart"
         color="deep-purple lighten-1"
         thumb-label="always"
         max="32">
@@ -64,7 +85,7 @@
         color="amber lighten-1"
         thumb-label="always"
         max="4">
-      </v-slider>
+      </v-slider> -->
     <v-card-text>
       <v-chip-group
         multiple
@@ -73,42 +94,31 @@
         color="deep-purple lighten-1"
         column
       >
-        <!-- <v-chip @click="chipHum = false,
-                        chipMois = false,
-                        chipLight = false,
-                        chipTemp = !chipTemp">
-        Temperatures</v-chip>
-
-        <v-chip @click="chipTemp = false,
-                        chipMois = false,
-                        chipLight = false,
-                        chipHum = !chipHum">
-        Humidity</v-chip>
-
-        <v-chip @click="chipTemp = false,
-                        chipHum = false,
-                        chipLight,
-                        chipMois = !chipMois">
-        Moisture</v-chip>
-
-        <v-chip @click="chipTemp = false,
-                        chipHum = false,
-                        chipMois = false,
-                        chipLight = !chipLight">
-        Light</v-chip> -->
         <v-chip @click="chipTemp = !chipTemp">Temperatures</v-chip>
         <v-chip @click="chipHum = !chipHum">Humidity</v-chip>
         <v-chip @click="chipMois = !chipMois">Moisture</v-chip>
         <v-chip @click="chipLight = !chipLight">Light</v-chip>
 
-        <!-- <temp-measurements-component v-if="chipTemp" :slyder="sliderValue"></temp-measurements-component> -->
-        <!-- <hum-measurements-component v-if="chipHum" :slyder="sliderValue"></hum-measurements-component> -->
-        <!-- <mois-measurements-component v-if="chipMois"></mois-measurements-component> -->
-        <!-- <light-measurements-component v-if="chipLight"></light-measurements-component> -->
-        <measurements-component v-if="chipTemp" :slyderBegin="sliderValueBegin" :slyderEnd="sliderValueEnd" measurementType="temp"></measurements-component>
-        <measurements-component v-if="chipHum" :slyderBegin="sliderValueBegin" :slyderEnd="sliderValueEnd" measurementType="humidity"></measurements-component>
-        <measurements-component v-if="chipMois" :slyderBegin="sliderValueBegin" :slyderEnd="sliderValueEnd" measurementType="moisture"></measurements-component>
-        <measurements-component v-if="chipLight" :slyderBegin="sliderValueBegin" :slyderEnd="sliderValueEnd" measurementType="light"></measurements-component>
+        <measurements-component
+          v-if="chipTemp"
+          :pickerDates="dates"
+          measurementType="temp"
+        ></measurements-component>
+        <measurements-component
+          v-if="chipHum"
+          :pickerDates="dates"
+          measurementType="humidity"
+        ></measurements-component>
+        <measurements-component
+          v-if="chipMois"
+          :pickerDates="dates"
+          measurementType="moisture"
+        ></measurements-component>
+        <measurements-component
+          v-if="chipLight"
+          :pickerDates="dates"
+          measurementType="light"
+        ></measurements-component>
       </v-chip-group>
     </v-card-text>
 
@@ -129,60 +139,68 @@
 
 
 <script>
-
 //get the length of the measurement
 //create a date picker
 //get index of measurement/temp where time_stamp == date picker => set to slider min
 //get index of measurement/temp where time_stamp == date picker => set to slider max
 import PlantService from "../services/PlantService";
 export default {
-    name: "Plant",
+  name: "Plant",
   data() {
-      return {
-          sliderValueBegin: '19',
-          sliderValueEnd: '42',
-          loading: false,
-          selection: [],
-          plantId: '1',
-          plantName: '',
-          plantType: '',
-          plantDop: '',
-          chipTemp: false,
-          chipHum: false,
-          chipMois: false,
-          chipLight: false,
+    return {
+      loading: false,
+      selection: [],
+      plantId: "1",
+      plantName: "",
+      plantType: "",
+      plantDop: "",
+      chipTemp: false,
+      chipHum: false,
+      chipMois: false,
+      chipLight: false,
+      chipDatePicker: false,
+      dates: ["2021-09-01", "2021-11-30"],
     };
   },
   methods: {
     reserve() {
-        this.loading = true
+      this.loading = true;
 
-        setTimeout(() => (this.loading = false), 2000)
+      setTimeout(() => (this.loading = false), 2000);
     },
   },
   created() {
     this.plantId = this.$route.params.plantId;
-    PlantService.getPlants().then(response => {
+    PlantService.getPlants().then((response) => {
       //console.log(response)
-          const data = response.data
-          //console.log(data)
-          const plants = []
-          for (let key in data) {
-            const plant = data[key]
-            //plant.ident = key
-            plants.push(plant)
-          }
-          //console.log(plants)
-          //let index = plants.findIndex((plant) => plant.id === 19);
-          let index = plants.map(function (elelement) {return elelement.id;}).indexOf(Number(this.plantId));
-          // let index = plants.map((el) => el.id).indexOf(19);
-          console.log("id: " + this.plantId);
-          console.log("index: " + index);
-          this.plantName = plants[index].name;
-          this.plantType = plants[index].type;
-          this.plantDop = plants[index].dop;
-          //console.log(plants.map((el) => el.id).indexOf(1));
-        });
+      const data = response.data;
+      //console.log(data)
+      const plants = [];
+      for (let key in data) {
+        const plant = data[key];
+        //plant.ident = key
+        plants.push(plant);
+      }
+      //console.log(plants)
+      //let index = plants.findIndex((plant) => plant.id === 19);
+      let index = plants
+        .map(function (elelement) {
+          return elelement.id;
+        })
+        .indexOf(Number(this.plantId));
+      // let index = plants.map((el) => el.id).indexOf(19);
+      console.log("id: " + this.plantId);
+      console.log("index: " + index);
+      this.plantName = plants[index].name;
+      this.plantType = plants[index].type;
+      this.plantDop = plants[index].dop;
+      //console.log(plants.map((el) => el.id).indexOf(1));
+    });
+  },
+  computed: {
+    dateRangeText() {
+      return this.dates.join(" ~ ");
+    },
   },
 };
 </script>

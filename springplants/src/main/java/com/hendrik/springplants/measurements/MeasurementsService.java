@@ -1,6 +1,5 @@
 package com.hendrik.springplants.measurements;
 
-//import java.util.Date;
 import java.sql.Date;
 import java.util.List;
 
@@ -23,8 +22,20 @@ public class MeasurementsService {
         return measurementsRepository.findAll();
     }
 
-    public List<Integer> getTempByTimePeriod(Long id, Date begin, Date end) {
+    public List<Integer> getTempBetween(Long id, Date begin, Date end) {
         return measurementsRepository.findTempByPlantIdBetween(id, begin, end);
+    }
+
+    public List<Integer> getHumidityBetween(Long id, Date begin, Date end) {
+        return measurementsRepository.findHumidityByPlantIdBetween(id, begin, end);
+    }
+
+    public List<Integer> getMoistureBetween(Long id, Date begin, Date end) {
+        return measurementsRepository.findMoistureByPlantIdBetween(id, begin, end);
+    }
+
+    public List<Integer> getLightBetween(Long id, Date begin, Date end) {
+        return measurementsRepository.findLightByPlantIdBetween(id, begin, end);
     }
 
     public Page<Integer> getTempWithPaginationAndSorting(int offset, int pageSize, String field, Long id) {

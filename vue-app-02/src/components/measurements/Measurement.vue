@@ -39,14 +39,13 @@ const gradients = [
 ];
 
 export default {
-  name: "TempMeasurement",
-  props: ['slyderBegin',
-          'slyderEnd',
+  name: "Measurement",
+  props: ['pickerDates',
           'measurementType'],
   data() {
     return {
-      offset: this.slyderEnd,
-      pageSize: this.slyderBegin,
+      startDate: this.pickerDates[0],
+      endDate: this.pickerDates[1],
       measurements: [],
       measurementsLength: '',
       width: 2,
@@ -63,21 +62,21 @@ export default {
   },
   methods: {},
   created() {
-      axios.get('http://localhost:8080/api/measurements'
+    axios.get('http://localhost:8080/api/measurements'
           + '/' + this.measurementType
           + '/' + this.$route.params.plantId
-          + '/' + 'pagination/timeStamp'
-          + '/' + this.offset
-          + '/' + this.pageSize )
+          + '/' + 'between/',
+          { params: {begin: this.startDate, end: this.endDate}})
       .then(response => {
-          //var slicedData = response.data.slice(response.data.length - this.slyder, response.data.length);
+        //var slicedData = response.data.slice(response.data.length - this.slyder, response.data.length);
           //this.measurements = slicedData;
           //this.measurementsLength = slicedData.length;
           //console.log(slicedData);
-          this.measurements = response.data.content
-          this.measurementsLength = this.measurements.length
-          console.log(this.offset)
-          console.log(this.pageSize)
+          console.log(response.data)
+          this.measurements = response.data
+          // this.measurementsLength = this.measurements.length
+          console.log(this.startDate)
+          console.log(this.endDate)
           console.log(this.measurements)
       });
     // PlantService.getTempMeasurements().then((response) => {

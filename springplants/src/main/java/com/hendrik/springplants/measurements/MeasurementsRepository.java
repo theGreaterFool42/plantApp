@@ -12,8 +12,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MeasurementsRepository extends  JpaRepository<Measurements, Long>{
 
-    @Query("SELECT m.temp FROM Measurements m WHERE m.plantId = ?1 ORDER BY timeStamp")
+    @Query(value = "SELECT m.temp FROM measurements m WHERE m.plant_id = :id AND m.time_stamp BETWEEN :begin AND :end ORDER BY time_stamp", nativeQuery = true)
     List<Integer> findTempByPlantIdBetween(Long id, Date begin, Date end);
+
+    @Query(value = "SELECT m.humidity FROM measurements m WHERE m.plant_id = :id AND m.time_stamp BETWEEN :begin AND :end ORDER BY time_stamp", nativeQuery = true)
+    List<Integer> findHumidityByPlantIdBetween(Long id, Date begin, Date end);
+
+    @Query(value = "SELECT m.moisture FROM measurements m WHERE m.plant_id = :id AND m.time_stamp BETWEEN :begin AND :end ORDER BY time_stamp", nativeQuery = true)
+    List<Integer> findMoistureByPlantIdBetween(Long id, Date begin, Date end);
+
+    @Query(value = "SELECT m.light FROM measurements m WHERE m.plant_id = :id AND m.time_stamp BETWEEN :begin AND :end ORDER BY time_stamp", nativeQuery = true)
+    List<Integer> findLightByPlantIdBetween(Long id, Date begin, Date end);
 
     @Query("SELECT m.temp FROM Measurements m WHERE m.plantId = ?1")
     Page<Integer> findTempByPlantId(Long id, Pageable pageable);

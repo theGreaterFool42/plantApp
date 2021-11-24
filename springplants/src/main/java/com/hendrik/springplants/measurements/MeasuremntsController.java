@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;;
 
@@ -29,9 +30,24 @@ public class MeasuremntsController {
         return measurementsService.getMeasurements();
     }
 
-    @GetMapping(value = "temp/{plantId}/{begin}/{end}")
-    public List<Integer> getTempByPlantIdAndTimePeriod(@PathVariable("plantId") Long id, @PathVariable("begin") Date begin, @PathVariable("end") Date end) {
-        return measurementsService.getTempByTimePeriod(id, begin, end);
+    @GetMapping(value = "/temp/{plantId}/between/")
+    public List<Integer> getTempBetween(@PathVariable("plantId") Long id, @RequestParam("begin") Date begin, @RequestParam("end") Date end) {
+        return measurementsService.getTempBetween(id, begin, end);
+    }
+
+    @GetMapping(value = "/humidity/{plantId}/between/")
+    public List<Integer> getHumidityBetween(@PathVariable("plantId") Long id, @RequestParam("begin") Date begin, @RequestParam("end") Date end) {
+        return measurementsService.getHumidityBetween(id, begin, end);
+    }
+
+    @GetMapping(value = "/moisture/{plantId}/between/")
+    public List<Integer> getMoistureBetween(@PathVariable("plantId") Long id, @RequestParam("begin") Date begin, @RequestParam("end") Date end) {
+        return measurementsService.getMoistureBetween(id, begin, end);
+    }
+
+    @GetMapping(value = "/light/{plantId}/between/")
+    public List<Integer> getLightBetween(@PathVariable("plantId") Long id, @RequestParam("begin") Date begin, @RequestParam("end") Date end) {
+        return measurementsService.getLightBetween(id, begin, end);
     }
 
     @GetMapping(value = "temp/{plantId}/pagination/{field}/{offset}/{pageSize}")
