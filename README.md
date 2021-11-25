@@ -25,11 +25,11 @@ this is the arduino c++ code, that generates the data for the app
 ### Todo
 
 - DatePicker should be a pop up (I guess)
-- there should be a limit to the displayed data points.
-    - I currently ask for all the measurements of a type in a given time period with no regards how many data points there are
-    - So I have to calculate averages of points to match the limit
-    - either directly in the api, or in vue
-    - ## I have started a calculation for it, but it is still a bit buggy
+- Now the calculation for the reduced dataset works
+    - But moisture is broken if you get the average of 0s and 1s it is only 1 if 100% are 1.
+    - Maybe I will just change the data from 0/1 to 0%/100%. This will fix it
+    - When the dataset gets really big and a user requests data for a long time period (that get reduced to 32 values anyways)
+      it could be better to reduce the data in the api before sending it to the frontend
 - Stock photo should be a photo from the database
     - so photos must be stored in the database
         -  in the far future there should be a camera, that shoots photos, to make timelapses

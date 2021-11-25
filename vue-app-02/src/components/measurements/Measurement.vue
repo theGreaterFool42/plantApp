@@ -49,7 +49,7 @@ export default {
       measurements: [],
       measurementsLength: '',
       processedData: [],
-      maxValues: 16,
+      maxValues: 32,
       width: 2,
       radius: 10,
       padding: 8,
@@ -63,9 +63,6 @@ export default {
     };
   },
   methods: {},
-  //the calculation for the reduced dataset isn't working reliable. I'm not sure if
-  //the first and the last values are correct
-  //With datasets below the max(32) things can go wrong
   //Moisture is always 0, becasue if you get an average of 0 and 1 and floor it, it is 0
   created() {
     axios.get('http://localhost:8080/api/measurements'
@@ -79,22 +76,33 @@ export default {
           this.measurementsLength = this.measurements.length
           // console.log(this.startDate)
           // console.log(this.endDate)
-          console.log(this.measurements)
-          var factor = Math.floor(this.measurementsLength/this.maxValues)
-          console.log(this.measurementsLength)
-          console.log(factor)
-          var tempValue = 0;
-          for (let key in this.measurements) {
-            var measurement = this.measurements[key];
-              tempValue+=measurement;
-            if(key%factor == 0) {
-              tempValue=Math.floor(tempValue/factor)
-              this.processedData.push(tempValue);
-              tempValue = 0;
+          console.log("measurements: " + this.measurements)
+          console.log("measurementsLength: " + this.measurementsLength)
+          // calc compressed array
+          if (this.measurementsLength > this.maxValues) {
+            var factor = Math.floor(this.measurementsLength/this.maxValues)
+            var mod = this.measurementsLength%this.maxValues;
+            var reducedDate = this.measurements.slice(0, (this.measurementsLength-mod))
+            //console.log("mod: " + mod)
+            //console.log("factor: " + factor)
+            //console.log("reducedData: " + reducedDate)
+            var tempValue = 0;
+            for (let key in reducedDate) {
+              var measurement = reducedDate[key];
+                tempValue+=measurement;
+              if(key%factor == (factor-1)) {
+                tempValue=Math.floor(tempValue/factor)
+                this.processedData.push(tempValue);
+                tempValue = 0;
+              }
+              //console.log("key: " + key);
             }
-            console.log(key);
           }
-          console.log(this.processedData);
+          else {
+            this.processedData = this.measurements;
+          }
+          console.log("processedData: " + this.processedData);
+          console.log("processedDataLength: " + this.processedData.length)
       });
     // PlantService.getTempMeasurements().then((response) => {
     //   this.measurements = response.data;
